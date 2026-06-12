@@ -9,6 +9,7 @@
 
   html {
     scroll-behavior: smooth;
+    color-scheme: dark;
   }
 
   body {
@@ -16,6 +17,10 @@
     background-image: radial-gradient(ellipse at 50% 0%, rgba(34, 197, 94, 0.08) 0%, transparent 60%),
       radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
     min-height: 100vh;
+  }
+
+  option {
+    @apply bg-stadium-darker text-white;
   }
 }
 

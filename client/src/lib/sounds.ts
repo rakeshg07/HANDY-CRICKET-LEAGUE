@@ -44,9 +44,12 @@ export const sounds = {
     }
   },
   out: () => {
-    playTone(200, 0.1, 'sawtooth', 0.4);
-    setTimeout(() => playTone(150, 0.3, 'sawtooth', 0.4), 100);
-    setTimeout(() => playTone(100, 0.4, 'sawtooth', 0.3), 250);
+    try {
+      const audio = new Audio('/fahh.mpeg');
+      audio.play().catch(console.error);
+    } catch {
+      // Audio not available
+    }
   },
   victory: () => {
     [523, 659, 784, 1047].forEach((freq, i) => {
