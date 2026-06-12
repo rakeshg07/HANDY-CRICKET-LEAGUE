@@ -16,7 +16,7 @@ interface AppShellProps {
 export function AppShell({ children, showHeader = true }: AppShellProps) {
   const hydrate = useProfileStore((s) => s.hydrate);
   const screen = useGameStore((s) => s.screen);
-  const hideHeader = ['match', 'toss'].includes(screen);
+  const hideHeader = ['match', 'toss', 'home'].includes(screen);
 
   useEffect(() => {
     hydrate();

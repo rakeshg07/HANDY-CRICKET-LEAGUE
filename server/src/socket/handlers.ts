@@ -59,6 +59,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
         }
         socket.emit('match-state', { room: result.room, liveState: result.liveState });
       } else {
+        socket.emit('reconnect-failed');
         socket.emit('error', 'Could not reconnect to room');
       }
     });
@@ -236,9 +237,11 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
               io.to(room.id).emit('match-end', matchEnd);
             }
           } else {
-            engine.beginBallPhase();
-            const liveState = engine.buildLiveState('waiting-moves');
-            io.to(room.id).emit('ball-waiting', liveState);
+            setTimeout(() => {
+              engine.beginBallPhase();
+              const liveState = engine.buildLiveState('waiting-moves');
+              io.to(room.id).emit('ball-waiting', liveState);
+            }, 2500);
           }
         }, BALL_REVEAL_DELAY_MS);
       } catch (err) {

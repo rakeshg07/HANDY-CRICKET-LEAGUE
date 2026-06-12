@@ -2,6 +2,14 @@
 
 let audioContext: AudioContext | null = null;
 
+let sixAudio: HTMLAudioElement | null = null;
+let outAudio: HTMLAudioElement | null = null;
+
+if (typeof window !== 'undefined') {
+  sixAudio = new Audio('/six.mpeg');
+  outAudio = new Audio('/fahh.mpeg');
+}
+
 function getAudioContext(): AudioContext {
   if (!audioContext) {
     audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
@@ -39,22 +47,20 @@ export const sounds = {
   },
   runs: (runs: number) => {
     if (runs === 4 || runs === 6) {
-      try {
-        const audio = new Audio('/six.mpeg');
-        audio.play().catch(console.error);
-      } catch {
-        // Audio not available
+      if (sixAudio) {
+        sixAudio.currentTime = 0;
+        sixAudio.play().catch(() => playTone(500 + runs * 50, 0.2, 'sine', 0.35));
       }
     } else {
       playTone(500 + runs * 50, 0.2, 'sine', 0.35);
     }
   },
   out: () => {
-    try {
-      const audio = new Audio('/fahh.mpeg');
-      audio.play().catch(console.error);
-    } catch {
-      // Audio not available
+    if (outAudio) {
+      outAudio.currentTime = 0;
+      outAudio.play().catch(() => {
+        playTone(200, 0.1, 'sawtooth', 0.4);
+      });
     }
   },
   victory: () => {
@@ -63,5 +69,11 @@ export const sounds = {
     });
   },
   toss: () => playTone(300, 0.5, 'triangle', 0.3),
-  wicket: () => playTone(180, 0.5, 'sawtooth', 0.5),
+  wicket: () => {
+    if (outAudio) {
+      outAudio.currentTime = 0;
+      outAudio.play().catch(() => playTone(180, 0.5, 'sawtooth', 0.5));
+    }
+  },
 };
+

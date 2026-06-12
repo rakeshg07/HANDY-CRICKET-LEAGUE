@@ -23,7 +23,7 @@ export function BallHistory({ balls }: BallHistoryProps) {
             className="flex items-center justify-between text-sm py-1 border-b border-white/5 last:border-0"
           >
             <span className="text-gray-500 w-16">
-              {ball.overNumber}.{ball.ballNumber}
+              {ball.ballNumber === 6 ? `${ball.overNumber + 1}.0` : `${ball.overNumber}.${ball.ballNumber}`}
             </span>
             <span>
               {HAND_EMOJIS[ball.bowlerChoice]} vs {HAND_EMOJIS[ball.batsmanChoice]}

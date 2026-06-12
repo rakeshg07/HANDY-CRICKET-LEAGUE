@@ -23,6 +23,7 @@ export function MatchScreen() {
     movesReceived,
     liveState,
     myRole,
+    room,
   } = useGameStore();
   const { submitMove } = useSocket();
   const [showReveal, setShowReveal] = useState(false);
@@ -59,7 +60,11 @@ export function MatchScreen() {
         </motion.div>
 
         <PlayerRoleBar liveState={liveState} myPlayerId={playerId} />
-        <Scoreboard scoreboard={scoreboard} />
+        <Scoreboard 
+          scoreboard={scoreboard} 
+          totalOvers={room?.settings?.overs ?? 0}
+          recentBalls={ballHistory.slice(-6)} 
+        />
 
         <div className="glass p-4 rounded-2xl">
           {isWaitingForChoice && liveState?.ballPhase === 'waiting-moves' && (

@@ -14,12 +14,16 @@ import { TossScreen } from '@/components/screens/TossScreen';
 import { MatchScreen } from '@/components/screens/MatchScreen';
 import { ResultScreen } from '@/components/screens/ResultScreen';
 import { LeaderboardScreen } from '@/components/screens/LeaderboardScreen';
+import { LocalConfigScreen } from '@/components/screens/local/LocalConfigScreen';
+import { LocalTossScreen } from '@/components/screens/local/LocalTossScreen';
+import { LocalMatchScreen } from '@/components/screens/local/LocalMatchScreen';
+import { LocalResultScreen } from '@/components/screens/local/LocalResultScreen';
 
 export function GameRouter() {
   useSocketInit();
   const screen = useGameStore((s) => s.screen);
 
-  const screens = {
+  const screens: Record<string, React.ReactNode> = {
     home: <HomeScreen />,
     profile: <ProfileScreen />,
     rules: <RulesScreen />,
@@ -31,7 +35,12 @@ export function GameRouter() {
     match: <MatchScreen />,
     result: <ResultScreen />,
     leaderboard: <LeaderboardScreen />,
+    'local-config': <LocalConfigScreen />,
+    'local-toss': <LocalTossScreen />,
+    'local-match': <LocalMatchScreen />,
+    'local-result': <LocalResultScreen />,
   };
 
   return <AppShell>{screens[screen]}</AppShell>;
 }
+

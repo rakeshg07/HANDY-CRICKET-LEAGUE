@@ -15,75 +15,139 @@ export function HomeScreen() {
   const { error, setError, setScreen } = useGameStore();
   const profile = useProfileStore((s) => s.profile);
 
-  const navCards = [
-    { icon: '👤', label: 'Profile', screen: 'profile' as const },
-    { icon: '📖', label: 'Rules', screen: 'rules' as const },
-    { icon: '🧪', label: 'Multiplayer Test', screen: 'test-match' as const },
+  const leftNav = [
+    { icon: '👤', label: 'Profile', action: () => setScreen('profile') },
+    { icon: '📊', label: 'Statistics', action: () => setScreen('profile') },
+    { icon: '📜', label: 'Match History', action: () => setScreen('profile') },
+    { icon: '👥', label: 'Friends', action: () => setScreen('profile') },
+    { icon: '🏆', label: 'Leaderboards', action: () => setScreen('leaderboard') },
+    { icon: '⚙️', label: 'Settings', action: () => setScreen('settings') },
+  ];
+
+  const rightNav = [
+    { icon: '➕', label: 'Create Room', action: () => setCreateOpen(true), primary: true },
+    { icon: '🚪', label: 'Join Room', action: () => setJoinOpen(true), primary: true },
+    { icon: '🥇', label: 'Tournaments', action: () => alert('Coming Soon!') },
+    { icon: '🧪', label: 'Test Multiplayer', action: () => setScreen('test-match') },
   ];
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-8"
-      >
-        <motion.div
-          animate={{ rotate: [0, 5, -5, 0] }}
-          transition={{ repeat: Infinity, duration: 4 }}
-          className="text-7xl mb-4"
-        >
-          🏏
-        </motion.div>
-        <h1 className="text-4xl sm:text-6xl font-black bg-gradient-to-r from-stadium-green via-stadium-green-glow to-emerald-400 bg-clip-text text-transparent">
-          Handy Cricket League
-        </h1>
-        <p className="text-gray-400 mt-3 text-lg">Real-time Multiplayer Hand Cricket</p>
-        {profile.name && (
-          <p className="text-sm text-stadium-green mt-2">
-            Welcome back, {profile.avatar} {profile.name}
-          </p>
-        )}
-      </motion.div>
+    <div className="min-h-screen relative overflow-hidden flex flex-col p-4 sm:p-8">
+      {/* Animated Stadium Background Overlay */}
+      <div className="absolute inset-0 z-0 bg-[url('/stadium-bg.jpg')] bg-cover bg-center opacity-20" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-stadium-dark/80 via-transparent to-stadium-dark" />
 
-      <GlassCard className="w-full max-w-md mb-6" strong>
-        {error && (
-          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm flex justify-between">
-            <span>{error}</span>
-            <button onClick={() => setError(null)}>✕</button>
-          </div>
-        )}
+      {/* Main Content */}
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 h-full flex-1 max-w-7xl mx-auto w-full">
+        
+        {/* LEFT PANEL */}
+        <div className="lg:col-span-3 flex flex-col gap-3">
+          <GlassCard className="h-full" strong>
+            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Dashboard</h2>
+            <div className="space-y-2">
+              {leftNav.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => { sounds.click(); item.action(); }}
+                  className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition-colors text-left"
+                >
+                  <span className="text-2xl">{item.icon}</span>
+                  <span className="font-semibold text-gray-200">{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </GlassCard>
+        </div>
 
-        <div className="space-y-3">
-          <button
-            onClick={() => { sounds.click(); setCreateOpen(true); }}
-            className="btn-primary w-full text-lg py-4"
+        {/* CENTER PANEL */}
+        <div className="lg:col-span-6 flex flex-col justify-center items-center gap-8 py-8 lg:py-0">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center w-full"
           >
-            Create Room
-          </button>
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ repeat: Infinity, duration: 4 }}
+              className="text-8xl mb-6 drop-shadow-2xl"
+            >
+              🏏
+            </motion.div>
+            <h1 className="text-5xl sm:text-7xl font-black bg-gradient-to-br from-stadium-green via-emerald-400 to-teal-200 bg-clip-text text-transparent drop-shadow-lg mb-2">
+              HCL
+            </h1>
+            <p className="text-xl font-medium text-emerald-100/70 tracking-widest uppercase">
+              Handy Cricket League
+            </p>
+          </motion.div>
+
+          <GlassCard className="w-full max-w-md text-center bg-white/5 backdrop-blur-xl border border-white/10">
+            {profile.name ? (
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center text-4xl shadow-inner border border-white/20">
+                  {profile.avatar}
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold">{profile.name}</h3>
+                  <div className="flex items-center justify-center gap-2 mt-1 text-sm text-stadium-green font-medium">
+                    <span className="w-2 h-2 rounded-full bg-stadium-green animate-pulse" />
+                    Online & Ready
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="py-4">
+                <h3 className="text-xl text-gray-400">Welcome Guest</h3>
+                <p className="text-sm mt-2 text-gray-500">Set up your profile to save stats.</p>
+              </div>
+            )}
+          </GlassCard>
+
+          {error && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-md p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-400 text-sm flex justify-between items-center shadow-lg">
+              <span>{error}</span>
+              <button onClick={() => setError(null)} className="hover:text-white transition-colors">✕</button>
+            </motion.div>
+          )}
+
           <button
-            onClick={() => { sounds.click(); setJoinOpen(true); }}
-            className="btn-secondary w-full text-lg py-4"
+            onClick={() => { sounds.click(); setScreen('local-config'); }}
+            className="w-full max-w-md py-5 rounded-2xl font-black text-2xl bg-gradient-to-r from-stadium-green to-emerald-500 text-white shadow-[0_0_40px_rgba(34,197,94,0.4)] hover:shadow-[0_0_60px_rgba(34,197,94,0.6)] hover:scale-[1.02] active:scale-95 transition-all"
           >
-            Join Room
+            ⚡ QUICK PLAY
           </button>
         </div>
-      </GlassCard>
 
-      <div className="grid grid-cols-3 gap-3 w-full max-w-md">
-        {navCards.map((card, i) => (
-          <motion.button
-            key={card.screen}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + i * 0.1 }}
-            onClick={() => { sounds.click(); setScreen(card.screen); }}
-            className="glass p-4 rounded-xl text-center hover:bg-white/10 transition-all hover:scale-105"
-          >
-            <div className="text-3xl mb-1">{card.icon}</div>
-            <div className="text-xs font-medium text-gray-300">{card.label}</div>
-          </motion.button>
-        ))}
+        {/* RIGHT PANEL */}
+        <div className="lg:col-span-3 flex flex-col gap-3">
+          <GlassCard className="h-full" strong>
+            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Play & Learn</h2>
+            <div className="space-y-3">
+              {rightNav.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => { sounds.click(); item.action(); }}
+                  className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all text-left ${
+                    item.primary
+                      ? 'bg-white/10 hover:bg-white/20 border border-white/5'
+                      : 'hover:bg-white/5'
+                  }`}
+                >
+                  <span className="text-2xl">{item.icon}</span>
+                  <span className="font-semibold text-gray-100">{item.label}</span>
+                </button>
+              ))}
+            </div>
+            
+            <div className="mt-8">
+              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Recent Matches</h3>
+              <div className="p-4 rounded-xl bg-black/20 text-center text-sm text-gray-500 border border-white/5">
+                No recent matches found.
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+
       </div>
 
       <CreateRoomModal open={createOpen} onClose={() => setCreateOpen(false)} />

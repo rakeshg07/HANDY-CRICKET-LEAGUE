@@ -17,7 +17,7 @@ import {
   createDefaultStats,
 } from '@hcl/shared';
 import { RECONNECT_GRACE_MS } from '@hcl/shared';
-import { MatchEngine } from './MatchEngine';
+import { MatchEngine } from '@hcl/shared';
 
 export class RoomManager {
   private rooms: Map<string, Room> = new Map();

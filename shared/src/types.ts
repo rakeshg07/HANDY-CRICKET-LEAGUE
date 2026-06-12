@@ -290,6 +290,7 @@ export interface ServerToClientEvents {
   'match-state': (data: { room: Room; liveState?: MatchLiveState }) => void;
   'room-state': (room: Room) => void;
   'error': (message: string) => void;
+  'reconnect-failed': () => void;
 }
 
 export interface ClientToServerEvents {

@@ -30,10 +30,10 @@ export function HandSelector({
   if (!canBat && !canBowl) {
     const message =
       role === 'OUT'
-        ? 'You are out — waiting for your team'
+        ? 'You are out — Waiting For Your Turn'
         : role === 'WAITING'
-          ? 'You are next to bat — get ready!'
-          : `Watching ${batsmanName ?? 'batter'} vs ${bowlerName ?? 'bowler'}`;
+          ? 'You are next to bat — Waiting For Your Turn'
+          : `Waiting For Your Turn — Watching ${batsmanName ?? 'batter'} vs ${bowlerName ?? 'bowler'}`;
 
     return (
       <div className="text-center py-8 space-y-3">

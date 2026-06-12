@@ -137,7 +137,7 @@ export function TestMatchScreen() {
 
       {match.phase === 'innings' && (
         <>
-          <Scoreboard scoreboard={scoreboard} />
+          <Scoreboard scoreboard={scoreboard} totalOvers={match.settings.overs} recentBalls={match.balls.slice(-6)} />
           {showReveal && lastResult && <BallReveal result={lastResult} />}
 
           <GlassCard>

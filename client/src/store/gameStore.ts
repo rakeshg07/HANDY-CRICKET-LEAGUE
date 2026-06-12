@@ -28,7 +28,11 @@ export type GameScreen =
   | 'toss'
   | 'match'
   | 'result'
-  | 'leaderboard';
+  | 'leaderboard'
+  | 'local-config'
+  | 'local-toss'
+  | 'local-match'
+  | 'local-result';
 
 interface GameState {
   screen: GameScreen;

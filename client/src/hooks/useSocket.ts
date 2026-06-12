@@ -58,6 +58,10 @@ export function useSocketInit() {
       store.setRoom(room);
     });
 
+    socket.on('reconnect-failed', () => {
+      import('@/lib/session').then(({ clearPlayerSession }) => clearPlayerSession());
+    });
+
     socket.on('player-ready', (playerId, isReady) => {
       store.updatePlayerReady(playerId, isReady);
     });

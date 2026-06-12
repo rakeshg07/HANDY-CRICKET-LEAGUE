@@ -33,7 +33,7 @@ export function CreateRoomModal({ open, onClose, defaultPlayerName }: CreateRoom
       format,
       overs: format === 'CUSTOM' ? overs : undefined,
       playersPerTeam: teamSize,
-      maxWickets: teamSize - 1,
+      maxWickets: teamSize, // Changed from teamSize - 1 to teamSize
       matchName: roomName,
     });
     createRoom(name, teamSize * 2);
@@ -69,15 +69,14 @@ export function CreateRoomModal({ open, onClose, defaultPlayerName }: CreateRoom
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-sm text-gray-400">Team Size</label>
-            <select
+            <input
+              type="number"
               className="input-field mt-1"
               value={teamSize}
+              min={1}
+              max={11}
               onChange={(e) => setTeamSize(Number(e.target.value))}
-            >
-              {[1, 2, 3, 4, 5, 6].map((n) => (
-                <option key={n} value={n}>{n} per team</option>
-              ))}
-            </select>
+            />
           </div>
           {format === 'CUSTOM' && (
             <div>

@@ -17,7 +17,7 @@ import {
   MatchLiveState,
   PlayerLiveState,
   PlayerMatchState,
-} from '@hcl/shared';
+} from '../index';
 import {
   generateId,
   processBall,
@@ -26,7 +26,7 @@ import {
   calculateStrikeRate,
   calculateEconomy,
   createDefaultStats,
-} from '@hcl/shared';
+} from '../index';
 
 export class MatchEngine {
   private match: Match;
@@ -389,9 +389,12 @@ export class MatchEngine {
 
   private checkInningsComplete(innings: Innings): boolean {
     const battingTeam = this.getTeam(innings.battingTeamId);
+    
+    // Support 1v1 where 1 player means 1 wicket
+    const effectiveTeamWickets = Math.max(1, battingTeam.battingOrder.length - 1);
     const maxWickets = Math.min(
       this.match.settings.maxWickets,
-      battingTeam.battingOrder.length - 1
+      battingTeam.battingOrder.length === 1 ? 1 : effectiveTeamWickets
     );
 
     if (innings.wickets >= maxWickets) return true;
@@ -403,7 +406,7 @@ export class MatchEngine {
     if (innings.target && innings.runs >= innings.target) return true;
 
     const remainingBatters =
-      battingTeam.battingOrder.length - innings.dismissedBatsmanIds.length - 1;
+      battingTeam.battingOrder.length - innings.dismissedBatsmanIds.length - (battingTeam.battingOrder.length === 1 ? 0 : 1);
     if (remainingBatters <= 0) return true;
 
     return false;
