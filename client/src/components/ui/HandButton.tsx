@@ -15,9 +15,9 @@ interface HandButtonProps {
 
 export function HandButton({ number, selected, disabled, onClick, size = 'md' }: HandButtonProps) {
   const sizeClasses = {
-    sm: 'w-16 h-16 text-2xl',
-    md: 'w-20 h-20 sm:w-24 sm:h-24 text-3xl',
-    lg: 'w-28 h-28 text-5xl',
+    sm: 'w-12 h-12 text-xl',
+    md: 'w-14 h-14 sm:w-18 sm:h-18 text-2xl',
+    lg: 'w-20 h-20 text-4xl',
   };
 
   return (

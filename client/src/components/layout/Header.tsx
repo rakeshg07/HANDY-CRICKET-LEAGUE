@@ -13,7 +13,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 glass-strong border-b border-stadium-border/50">
-      <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between">
         <button
           onClick={() => navigate('home')}
           className="flex items-center gap-2 font-black text-lg hover:text-stadium-green transition-colors"

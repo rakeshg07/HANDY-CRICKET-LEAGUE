@@ -31,6 +31,7 @@ interface AuthState {
   setError: (error: string | null) => void;
   
   checkAuth: () => Promise<void>;
+  updateUser: (updates: Partial<AuthUser> & { oldPassword?: string; newPassword?: string }) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -51,6 +52,20 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user: data.user, isAuthenticated: true });
     } catch (error) {
       set({ user: null, isAuthenticated: false });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  updateUser: async (updates) => {
+    try {
+      set({ isLoading: true, error: null });
+      const data = await api.put('/user/update', updates);
+      set({ user: data.user });
+    } catch (error: any) {
+      const errMsg = error.message || 'Failed to update profile';
+      set({ error: errMsg });
+      throw error;
     } finally {
       set({ isLoading: false });
     }

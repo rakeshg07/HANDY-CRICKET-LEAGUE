@@ -26,7 +26,7 @@ export function AppShell({ children, showHeader = true }: AppShellProps) {
     <>
       <Particles />
       {showHeader && !hideHeader && <Header />}
-      <main className="relative z-10 min-h-[calc(100vh-3.5rem)]">{children}</main>
+      <main className="relative z-10 min-h-[calc(100vh-3rem)]">{children}</main>
       <DeveloperPanel />
       <DebugOverlay />
     </>
