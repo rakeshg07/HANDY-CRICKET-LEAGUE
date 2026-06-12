@@ -26,49 +26,49 @@
 
 @layer components {
   .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-stadium-border rounded-2xl;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    @apply bg-[#0b1410]/60 backdrop-blur-xl border border-stadium-border/30 rounded-2xl transition-all duration-300;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .glass-strong {
-    @apply bg-white/10 backdrop-blur-2xl border border-stadium-green/30 rounded-2xl;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 197, 94, 0.1);
+    @apply bg-[#0e1f18]/80 backdrop-blur-2xl border border-stadium-green/45 rounded-2xl transition-all duration-300;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(34, 197, 94, 0.15);
   }
 
   .btn-primary {
-    @apply px-6 py-3 bg-stadium-green text-stadium-darker font-bold rounded-xl
-           hover:bg-stadium-green-glow transition-all duration-300
-           shadow-neon-sm hover:shadow-neon active:scale-95;
+    @apply px-6 py-3 bg-gradient-to-r from-stadium-green to-emerald-500 text-stadium-darker font-black rounded-xl
+           hover:brightness-110 active:scale-95 transition-all duration-200
+           shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)];
   }
 
   .btn-secondary {
-    @apply px-6 py-3 glass text-stadium-green font-semibold rounded-xl
-           hover:bg-white/10 transition-all duration-300 active:scale-95;
+    @apply px-6 py-3 bg-white/5 border border-white/10 hover:border-white/20 text-stadium-green font-bold rounded-xl
+           hover:bg-white/10 transition-all duration-200 active:scale-95;
   }
 
   .btn-ghost {
-    @apply px-4 py-2 text-gray-400 hover:text-stadium-green transition-colors;
+    @apply px-4 py-2 text-gray-400 hover:text-stadium-green font-semibold transition-all duration-200 hover:scale-105;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 glass rounded-xl text-white placeholder-gray-500
+    @apply w-full px-4 py-2.5 bg-black/45 border border-white/10 rounded-xl text-white placeholder-gray-500
            focus:outline-none focus:border-stadium-green/50 focus:ring-1 focus:ring-stadium-green/30
-           transition-all duration-200;
+           transition-all duration-200 shadow-inner;
   }
 
   .hand-btn {
-    @apply w-20 h-20 sm:w-24 sm:h-24 rounded-full glass-strong flex flex-col items-center justify-center
-           cursor-pointer transition-all duration-300 hover:scale-110 hover:shadow-neon
+    @apply w-14 h-14 sm:w-18 sm:h-18 rounded-full glass flex flex-col items-center justify-center
+           cursor-pointer transition-all duration-300 hover:scale-110 hover:border-stadium-green/50 hover:shadow-neon
            active:scale-95 select-none;
   }
 
   .hand-btn.selected {
-    @apply border-stadium-green bg-stadium-green/20 shadow-neon;
+    @apply border-stadium-green bg-stadium-green/20 shadow-neon scale-105;
   }
 
   .score-popup {
-    @apply text-4xl font-black text-stadium-green-glow;
-    text-shadow: 0 0 20px rgba(74, 222, 128, 0.8);
+    @apply text-5xl font-black bg-gradient-to-r from-stadium-green-glow to-emerald-300 bg-clip-text text-transparent;
+    filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.5));
   }
 }
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import { useProfileStore } from '@/store/profileStore';
+import { useAuthStore } from '@/store/authStore';
 import { useSocket } from '@/hooks/useSocket';
 import { sounds } from '@/lib/sounds';
 
@@ -13,16 +13,16 @@ interface JoinRoomModalProps {
 }
 
 export function JoinRoomModal({ open, onClose, defaultPlayerName }: JoinRoomModalProps) {
-  const profile = useProfileStore((s) => s.profile);
+  const { user } = useAuthStore();
   const { joinRoom } = useSocket();
   const [roomCode, setRoomCode] = useState('');
-  const [playerName, setPlayerName] = useState(defaultPlayerName ?? profile.name ?? 'Player');
   const [mode, setMode] = useState<'code' | 'quick'>('code');
 
   const handleJoin = () => {
-    if (!roomCode.trim() || !playerName.trim()) return;
+    if (!roomCode.trim()) return;
+    const name = user?.fullName || defaultPlayerName || 'Player';
     sounds.click();
-    joinRoom(roomCode.trim().toUpperCase(), playerName.trim());
+    joinRoom(roomCode.trim().toUpperCase(), name);
     onClose();
   };
 
@@ -77,16 +77,7 @@ export function JoinRoomModal({ open, onClose, defaultPlayerName }: JoinRoomModa
           </div>
         )}
 
-        <input
-          className="input-field"
-          placeholder="Your Name (unique per device)"
-          value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
-        />
 
-        <p className="text-xs text-gray-500">
-          Use a different name in each browser tab
-        </p>
 
         <button
           onClick={handleJoin}

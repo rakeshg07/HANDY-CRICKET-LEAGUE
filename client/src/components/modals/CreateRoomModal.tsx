@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
+import { useAuthStore } from '@/store/authStore';
 import { useGameStore } from '@/store/gameStore';
 import { useProfileStore } from '@/store/profileStore';
 import { useSocket } from '@/hooks/useSocket';
@@ -15,19 +16,18 @@ interface CreateRoomModalProps {
 }
 
 export function CreateRoomModal({ open, onClose, defaultPlayerName }: CreateRoomModalProps) {
-  const profile = useProfileStore((s) => s.profile);
-  const [hostName, setHostName] = useState(defaultPlayerName ?? profile.name ?? 'Player');
-  const { setMatchSettings } = useGameStore();
+  const { user } = useAuthStore();
   const { createRoom } = useSocket();
+  const setMatchSettings = useGameStore((s) => s.setMatchSettings);
 
-  const [roomName, setRoomName] = useState('My Room');
-  const [format, setFormat] = useState<MatchFormat>('T20');
+  const [roomName, setRoomName] = useState('HCL Custom Match');
+  const [format, setFormat] = useState<MatchFormat>('T10');
+  const [overs, setOvers] = useState(1);
   const [teamSize, setTeamSize] = useState(2);
-  const [overs, setOvers] = useState(20);
-  const [isPrivate, setIsPrivate] = useState(true);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const handleCreate = () => {
-    const name = hostName.trim() || 'Player';
+    const name = user?.fullName || 'Player';
     sounds.click();
     setMatchSettings({
       format,
@@ -103,12 +103,6 @@ export function CreateRoomModal({ open, onClose, defaultPlayerName }: CreateRoom
           <span className="text-sm text-gray-300">Private Room (code required)</span>
         </label>
 
-        <input
-          className="input-field"
-          placeholder="Host Name"
-          value={hostName}
-          onChange={(e) => setHostName(e.target.value)}
-        />
 
         <button onClick={handleCreate} className="btn-primary w-full">
           Generate Room

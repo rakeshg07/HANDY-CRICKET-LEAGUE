@@ -15,7 +15,7 @@ export function LeaderboardScreen() {
   const { setScreen } = useGameStore();
 
   return (
-    <div className="min-h-screen p-4 relative z-10">
+    <div className="p-4 relative z-10">
       <div className="max-w-md mx-auto space-y-6">
         <h1 className="text-3xl font-black text-center">Leaderboard</h1>
         <p className="text-center text-gray-500 text-sm">Coming Soon</p>

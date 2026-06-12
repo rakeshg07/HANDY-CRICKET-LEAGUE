@@ -5,13 +5,15 @@ import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { useAuthStore } from '@/store/authStore';
 import { useProfileStore } from '@/store/profileStore';
+import { useRouter } from 'next/navigation';
 import { EditProfileModal } from '@/components/modals/EditProfileModal';
 import { sounds } from '@/lib/sounds';
 
 export function ProfileScreen() {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const { profile, hydrated, hydrate } = useProfileStore();
   const [editOpen, setEditOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     hydrate();
@@ -79,12 +81,23 @@ export function ProfileScreen() {
             <span className="text-stadium-green font-bold">Online & Registered</span>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex items-center justify-center sm:justify-start gap-3">
             <button
               onClick={() => { sounds.click(); setEditOpen(true); }}
-              className="px-5 py-2.5 bg-white/5 border border-white/10 text-gray-200 font-bold rounded-xl text-sm hover:bg-white/10 hover:border-white/20 active:scale-95 transition-all flex items-center gap-2 mx-auto sm:mx-0 shadow-lg"
+              className="px-5 py-2.5 bg-white/5 border border-white/10 text-gray-200 font-bold rounded-xl text-sm hover:bg-white/10 hover:border-white/20 active:scale-95 transition-all flex items-center gap-2 shadow-lg"
             >
               ⚙️ Edit Game Profile
+            </button>
+
+            <button
+              onClick={async () => {
+                sounds.click();
+                await logout();
+                router.push('/login');
+              }}
+              className="px-5 py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 font-bold rounded-xl text-sm hover:bg-red-500/20 hover:border-red-500/50 active:scale-95 transition-all flex items-center gap-2 shadow-lg"
+            >
+              🚪 Logout
             </button>
           </div>
         </div>

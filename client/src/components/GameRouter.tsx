@@ -6,6 +6,8 @@ import { AppShell } from '@/components/layout/AppShell';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { HomeScreen } from '@/components/screens/HomeScreen';
 import { ProfileScreen } from '@/components/screens/ProfileScreen';
+import { MatchHistoryScreen } from '@/components/screens/MatchHistoryScreen';
+import { FriendsScreen } from '@/components/screens/FriendsScreen';
 import { RulesScreen } from '@/components/screens/RulesScreen';
 import { SettingsScreen } from '@/components/screens/SettingsScreen';
 import { MultiplayerTestScreen } from '@/components/screens/MultiplayerTestScreen';
@@ -28,8 +30,8 @@ export function GameRouter() {
     home: <HomeScreen />,
     profile: <ProfileScreen />,
     statistics: <ProfileScreen />,
-    history: <ProfileScreen />,
-    friends: <ProfileScreen />,
+    history: <MatchHistoryScreen />,
+    friends: <FriendsScreen />,
     rules: <RulesScreen />,
     settings: <SettingsScreen />,
     leaderboard: <LeaderboardScreen />,

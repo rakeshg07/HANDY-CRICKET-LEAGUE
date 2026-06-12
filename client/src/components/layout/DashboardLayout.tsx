@@ -36,27 +36,25 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-5 h-full flex-1 max-w-6xl mx-auto w-full">
         
         {/* LEFT PANEL */}
-        <div className="hidden lg:flex lg:col-span-3 flex-col gap-3">
-          <GlassCard className="h-[calc(100vh-6rem)]" strong>
-            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Dashboard</h2>
-            <div className="space-y-1.5">
-              {leftNav.map((item) => {
-                const isActive = screen === item.target;
-                return (
-                  <button
-                    key={item.label}
-                    onClick={() => { sounds.click(); setScreen(item.target); }}
-                    className={`w-full flex items-center gap-3 p-2 sm:p-2.5 rounded-xl transition-colors text-left ${
-                      isActive ? 'bg-stadium-green/20 text-stadium-green' : 'hover:bg-white/10 text-gray-200'
-                    }`}
-                  >
-                    <span className="text-xl">{item.icon}</span>
-                    <span className="font-semibold text-sm">{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </GlassCard>
+        <div className="hidden lg:flex lg:col-span-3 flex-col gap-2.5 h-[calc(100vh-6rem)] overflow-y-auto pr-1">
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-1">Dashboard</h2>
+          {leftNav.map((item) => {
+            const isActive = screen === item.target;
+            return (
+              <button
+                key={item.label}
+                onClick={() => { sounds.click(); setScreen(item.target); }}
+                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left border ${
+                  isActive
+                    ? 'bg-stadium-green/20 border-stadium-green text-stadium-green shadow-neon-sm'
+                    : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 text-gray-200'
+                }`}
+              >
+                <span className="text-xl">{item.icon}</span>
+                <span className="font-bold text-sm">{item.label}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* CENTER PANEL */}
@@ -65,33 +63,72 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* RIGHT PANEL */}
-        <div className="hidden lg:flex lg:col-span-3 flex-col gap-3">
-          <GlassCard className="h-[calc(100vh-6rem)]" strong>
-            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Play & Learn</h2>
-            <div className="space-y-2">
-              {rightNav.map((item) => (
-                <button
-                  key={item.label}
-                  onClick={() => { sounds.click(); item.action(); }}
-                  className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
-                    item.primary
-                      ? 'bg-white/10 hover:bg-stadium-green/20 hover:text-stadium-green border border-white/5 hover:border-stadium-green/30'
-                      : 'hover:bg-white/10 text-gray-200'
-                  }`}
-                >
-                  <span className="text-xl">{item.icon}</span>
-                  <span className="font-semibold text-sm">{item.label}</span>
-                </button>
-              ))}
-            </div>
+        <div className="hidden lg:flex lg:col-span-3 flex-col gap-2.5 h-[calc(100vh-6rem)] overflow-y-auto pr-1">
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-1">Play & Learn</h2>
+          {rightNav.map((item) => (
+            <button
+              key={item.label}
+              onClick={() => { sounds.click(); item.action(); }}
+              className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left border ${
+                item.primary
+                  ? 'bg-stadium-green/10 border-stadium-green/30 text-stadium-green hover:bg-stadium-green/20 hover:border-stadium-green/50 shadow-neon-sm font-bold'
+                  : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 text-gray-200'
+              }`}
+            >
+              <span className="text-xl">{item.icon}</span>
+              <span className="font-bold text-sm">{item.label}</span>
+            </button>
+          ))}
 
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Recent Matches</h2>
-              <div className="p-3 bg-black/20 rounded-xl text-xs text-gray-500 text-center">
-                No recent matches found.
-              </div>
+          <div className="mt-4">
+            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1 mb-2">Recent Matches</h2>
+            <GlassCard className="p-3 border border-white/5 text-center text-xs text-gray-500 bg-black/20">
+              No recent matches found.
+            </GlassCard>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-white/10 lg:hidden pb-safe">
+        <div className="flex items-center justify-around p-2">
+          {leftNav.slice(0, 3).map((item) => {
+            const isActive = screen === item.target;
+            return (
+              <button
+                key={item.label}
+                onClick={() => { sounds.click(); setScreen(item.target); }}
+                className={`flex flex-col items-center gap-1 p-2 min-w-[4rem] rounded-xl transition-all ${
+                  isActive
+                    ? 'text-stadium-green'
+                    : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                }`}
+              >
+                <span className="text-xl">{item.icon}</span>
+                <span className="text-[10px] font-bold">{item.label}</span>
+              </button>
+            );
+          })}
+          
+          {/* Quick Play Mobile Button */}
+          <button
+            onClick={() => { sounds.click(); setScreen('test-match'); }}
+            className="flex flex-col items-center justify-center gap-1 min-w-[4.5rem] -mt-6 relative group"
+          >
+            <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-stadium-green to-emerald-500 flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(34,197,94,0.3)] border-4 border-[#121212] group-active:scale-95 transition-transform">
+              🏏
             </div>
-          </GlassCard>
+            <span className="text-[10px] font-bold text-stadium-green mt-1">Play</span>
+          </button>
+
+          {/* Multiplayer Mobile Dropdown (simplified as Join for now) */}
+          <button
+            onClick={() => { sounds.click(); setJoinOpen(true); }}
+            className="flex flex-col items-center gap-1 p-2 min-w-[4rem] rounded-xl text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all"
+          >
+            <span className="text-xl">🚪</span>
+            <span className="text-[10px] font-bold">Join</span>
+          </button>
         </div>
       </div>
 

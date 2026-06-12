@@ -20,7 +20,7 @@ import {
 import { MatchEngine } from '@hcl/shared';
 import { AIAgent, AIDifficulty, AIProfile, AI_PROFILES } from '../lib/ai/AIAgent';
 import { updateLocalStats } from '../lib/localStats';
-
+import { sounds } from '../lib/sounds';
 export type LocalScreen =
   | 'local-config'
   | 'local-toss'
@@ -199,6 +199,10 @@ export const useLocalGameStore = create<LocalGameState>((set, get) => ({
         // After both moves submitted, the engine returns a BallResultEvent
         if (res && 'ball' in res) {
           const resultEvent = res as BallResultEvent;
+          
+          sounds.reveal();
+          if (resultEvent.isWicket) sounds.out();
+          else sounds.runs(resultEvent.ball.runs);
           
           set(s => ({
             ballHistory: [...s.ballHistory, resultEvent.ball],
