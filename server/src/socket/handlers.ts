@@ -4,6 +4,7 @@ import {
   ServerToClientEvents,
   BALL_REVEAL_DELAY_MS,
   TOSS_ANIMATION_MS,
+  Player,
 } from '@hcl/shared';
 import { RoomManager } from '../game/RoomManager';
 
@@ -14,7 +15,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
   io.on('connection', (socket: IOSocket) => {
     console.log(`Player connected: ${socket.id}`);
 
-    socket.on('create-room', (payload) => {
+    socket.on('create-room', (payload: any) => {
       try {
         const room = roomManager.createRoom(socket.id, payload);
         socket.join(room.id);
@@ -24,11 +25,11 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
       }
     });
 
-    socket.on('join-room', (payload) => {
+    socket.on('join-room', (payload: any) => {
       try {
         const room = roomManager.joinRoom(socket.id, payload.roomCode, payload.playerName);
         socket.join(room.id);
-        const me = room.players.find((p) => p.socketId === socket.id)!;
+        const me = room.players.find((p: Player) => p.socketId === socket.id)!;
         socket.emit('room-joined', room);
         socket.to(room.id).emit('player-joined', me);
       } catch (err) {
@@ -48,7 +49,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
       }
     });
 
-    socket.on('reconnect', (payload) => {
+    socket.on('reconnect', (payload: any) => {
       const result = roomManager.reconnect(socket.id, payload.roomCode, payload.playerId);
       if (result) {
         socket.join(result.room.id);
@@ -64,14 +65,14 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
       }
     });
 
-    socket.on('player-ready', (isReady) => {
+    socket.on('player-ready', (isReady: boolean) => {
       const result = roomManager.setPlayerReady(socket.id, isReady);
       if (result) {
         io.to(result.room.id).emit('player-ready', result.player.id, isReady);
       }
     });
 
-    socket.on('update-teams', (payload) => {
+    socket.on('update-teams', (payload: any) => {
       try {
         const room = roomManager.updateTeams(socket.id, payload);
         if (room) io.to(room.id).emit('teams-updated', room.teams);
@@ -80,7 +81,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
       }
     });
 
-    socket.on('assign-team', (payload) => {
+    socket.on('assign-team', (payload: any) => {
       try {
         const room = roomManager.updateTeams(socket.id, payload);
         if (room) io.to(room.id).emit('teams-updated', room.teams);
@@ -100,7 +101,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
       }
     });
 
-    socket.on('coin-toss', (payload) => {
+    socket.on('coin-toss', (payload: any) => {
       try {
         const result = roomManager.processToss(socket.id, payload.choice);
         if (!result) return;
@@ -113,7 +114,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
       }
     });
 
-    socket.on('innings-decision', (payload) => {
+    socket.on('innings-decision', (payload: any) => {
       try {
         const result = roomManager.getPlayerBySocketId(socket.id);
         if (!result) return;
@@ -139,7 +140,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
       }
     });
 
-    socket.on('submit-move', (payload) => {
+    socket.on('submit-move', (payload: any) => {
       try {
         const result = roomManager.getPlayerBySocketId(socket.id);
         if (!result) return;
@@ -177,7 +178,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
           io.to(room.id).emit('ball-result', ballEvent);
 
           if (ballEvent.isWicket) {
-            const outPlayer = room.players.find((p) => p.id === ballEvent.ball.batsmanId);
+            const outPlayer = room.players.find((p: Player) => p.id === ballEvent.ball.batsmanId);
             io.to(room.id).emit('player-out', {
               playerId: ballEvent.ball.batsmanId,
               playerName: outPlayer?.name ?? 'Player',
@@ -185,7 +186,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
               liveState: ballEvent.liveState,
             });
             if (ballEvent.nextBatsmanId) {
-              const next = room.players.find((p) => p.id === ballEvent.nextBatsmanId);
+              const next = room.players.find((p: Player) => p.id === ballEvent.nextBatsmanId);
               io.to(room.id).emit('next-batter', {
                 playerId: ballEvent.nextBatsmanId,
                 playerName: next?.name ?? 'Batter',
@@ -195,7 +196,7 @@ export function registerSocketHandlers(io: IOServer, roomManager: RoomManager): 
           }
 
           if (ballEvent.nextBowlerId) {
-            const next = room.players.find((p) => p.id === ballEvent.nextBowlerId);
+            const next = room.players.find((p: Player) => p.id === ballEvent.nextBowlerId);
             io.to(room.id).emit('next-bowler', {
               playerId: ballEvent.nextBowlerId!,
               playerName: next?.name ?? 'Bowler',

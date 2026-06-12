@@ -74,7 +74,7 @@ export class RoomManager {
 
     const room = this.rooms.get(roomId)!;
 
-    const reconnecting = room.players.find((p) => p.id && p.name === playerName && !p.isConnected);
+    const reconnecting = room.players.find((p: Player) => p.id && p.name === playerName && !p.isConnected);
     if (reconnecting) {
       this.clearDisconnectTimer(reconnecting.id);
       reconnecting.socketId = socketId;
@@ -89,7 +89,7 @@ export class RoomManager {
       throw new Error('Match already in progress — use reconnect with your player ID');
     }
 
-    if (room.players.some((p) => p.name === playerName && p.isConnected)) {
+    if (room.players.some((p: Player) => p.name === playerName && p.isConnected)) {
       throw new Error('Player name already taken in this room — use a unique name per device');
     }
 
@@ -115,7 +115,7 @@ export class RoomManager {
     const room = this.rooms.get(roomId);
     if (!room) return null;
 
-    const player = room.players.find((p) => p.id === playerId);
+    const player = room.players.find((p: Player) => p.id === playerId);
     if (!player) return null;
 
     this.clearDisconnectTimer(playerId);
@@ -151,7 +151,7 @@ export class RoomManager {
       throw new Error('Cannot leave during an active match — disconnect to trigger reconnect grace period');
     }
 
-    room.players = room.players.filter((p) => p.id !== player.id);
+    room.players = room.players.filter((p: Player) => p.id !== player.id);
     this.playerRoomIndex.delete(player.id);
 
     if (room.players.length === 0) {
@@ -172,7 +172,7 @@ export class RoomManager {
 
   getPlayerBySocketId(socketId: string): { room: Room; player: Player } | null {
     for (const room of this.rooms.values()) {
-      const player = room.players.find((p) => p.socketId === socketId);
+      const player = room.players.find((p: Player) => p.socketId === socketId);
       if (player) return { room, player };
     }
     return null;
@@ -199,15 +199,15 @@ export class RoomManager {
     }
 
     const allIds = [...payload.teamA.playerIds, ...payload.teamB.playerIds];
-    const validPlayers = allIds.every((id) => room.players.some((p) => p.id === id));
+    const validPlayers = allIds.every((id: string) => room.players.some((p: Player) => p.id === id));
     if (!validPlayers) throw new Error('Invalid player assignment');
 
     const teams = MatchEngine.createTeams(payload.teamA, payload.teamB);
     room.teams = teams;
     room.status = 'team-formation';
 
-    room.players.forEach((p) => {
-      const team = teams.find((t) => t.playerIds.includes(p.id));
+    room.players.forEach((p: Player) => {
+      const team = teams.find((t: Team) => t.playerIds.includes(p.id));
       if (team) p.teamId = team.id;
     });
 
@@ -221,8 +221,8 @@ export class RoomManager {
     if (player.id !== room.hostId) throw new Error('Only host can auto-balance teams');
 
     const half = Math.floor(room.players.length / 2);
-    const teamAIds = room.players.slice(0, half).map((p) => p.id);
-    const teamBIds = room.players.slice(half, half * 2).map((p) => p.id);
+    const teamAIds = room.players.slice(0, half).map((p: Player) => p.id);
+    const teamBIds = room.players.slice(half, half * 2).map((p: Player) => p.id);
 
     return this.updateTeams(socketId, {
       teamA: { name: 'Team A', playerIds: teamAIds, captainId: teamAIds[0] },
@@ -242,7 +242,7 @@ export class RoomManager {
       this.autoBalanceTeams(socketId);
     }
 
-    const allReady = room.players.every((p) => p.isReady);
+    const allReady = room.players.every((p: Player) => p.isReady);
     if (!allReady) throw new Error('All players must be ready');
 
     const settings = room.settings ?? resolveMatchSettings('T20');
@@ -279,17 +279,17 @@ export class RoomManager {
     
     let winnerId = player.id;
     if (!callerWins) {
-      const callerTeam = room.teams.find((t) => t.playerIds.includes(player.id));
-      const opponentTeam = room.teams.find((t) => t.id !== callerTeam?.id);
+      const callerTeam = room.teams.find((t: Team) => t.playerIds.includes(player.id));
+      const opponentTeam = room.teams.find((t: Team) => t.id !== callerTeam?.id);
       if (opponentTeam) {
         winnerId = opponentTeam.captainId;
       } else {
-        const opponent = room.players.find((p) => p.id !== player.id);
+        const opponent = room.players.find((p: Player) => p.id !== player.id);
         winnerId = opponent?.id ?? player.id;
       }
     }
     
-    const winner = room.players.find((p) => p.id === winnerId)!;
+    const winner = room.players.find((p: Player) => p.id === winnerId)!;
 
     room.match.tossWinnerId = winnerId;
     room.tossCompleted = true;
@@ -336,7 +336,7 @@ export class RoomManager {
     const room = this.rooms.get(roomId);
     if (!room) return;
 
-    room.players = room.players.filter((p) => p.id !== playerId);
+    room.players = room.players.filter((p: Player) => p.id !== playerId);
     this.playerRoomIndex.delete(playerId);
     this.disconnectTimers.delete(playerId);
 
@@ -357,7 +357,7 @@ export class RoomManager {
     const room = this.rooms.get(roomId);
     if (room) {
       this.codeIndex.delete(room.code);
-      room.players.forEach((p) => {
+      room.players.forEach((p: Player) => {
         this.playerRoomIndex.delete(p.id);
         this.clearDisconnectTimer(p.id);
       });
