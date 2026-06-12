@@ -38,9 +38,15 @@ export const sounds = {
     setTimeout(() => playTone(600, 0.15, 'sine', 0.3), 100);
   },
   runs: (runs: number) => {
-    playTone(500 + runs * 50, 0.2, 'sine', 0.35);
-    if (runs >= 4) {
-      setTimeout(() => playTone(700, 0.3, 'square', 0.3), 150);
+    if (runs === 4 || runs === 6) {
+      try {
+        const audio = new Audio('/six.mpeg');
+        audio.play().catch(console.error);
+      } catch {
+        // Audio not available
+      }
+    } else {
+      playTone(500 + runs * 50, 0.2, 'sine', 0.35);
     }
   },
   out: () => {
