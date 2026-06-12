@@ -3,6 +3,7 @@
 import { useGameStore } from '@/store/gameStore';
 import { useSocketInit } from '@/hooks/useSocket';
 import { AppShell } from '@/components/layout/AppShell';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { HomeScreen } from '@/components/screens/HomeScreen';
 import { ProfileScreen } from '@/components/screens/ProfileScreen';
 import { RulesScreen } from '@/components/screens/RulesScreen';
@@ -23,24 +24,37 @@ export function GameRouter() {
   useSocketInit();
   const screen = useGameStore((s) => s.screen);
 
-  const screens: Record<string, React.ReactNode> = {
+  const dashboardScreens: Record<string, React.ReactNode> = {
     home: <HomeScreen />,
     profile: <ProfileScreen />,
+    statistics: <ProfileScreen />,
+    history: <ProfileScreen />,
+    friends: <ProfileScreen />,
     rules: <RulesScreen />,
     settings: <SettingsScreen />,
+    leaderboard: <LeaderboardScreen />,
+  };
+
+  const gameScreens: Record<string, React.ReactNode> = {
     'test-match': <MultiplayerTestScreen />,
     lobby: <LobbyScreen />,
     teams: <TeamScreen />,
     toss: <TossScreen />,
     match: <MatchScreen />,
     result: <ResultScreen />,
-    leaderboard: <LeaderboardScreen />,
     'local-config': <LocalConfigScreen />,
     'local-toss': <LocalTossScreen />,
     'local-match': <LocalMatchScreen />,
     'local-result': <LocalResultScreen />,
   };
 
-  return <AppShell>{screens[screen]}</AppShell>;
+  let currentView;
+  if (dashboardScreens[screen]) {
+    currentView = <DashboardLayout>{dashboardScreens[screen]}</DashboardLayout>;
+  } else {
+    currentView = gameScreens[screen];
+  }
+
+  return <AppShell>{currentView}</AppShell>;
 }
 

@@ -20,6 +20,9 @@ import {
 export type GameScreen =
   | 'home'
   | 'profile'
+  | 'statistics'
+  | 'history'
+  | 'friends'
   | 'rules'
   | 'settings'
   | 'test-match'
