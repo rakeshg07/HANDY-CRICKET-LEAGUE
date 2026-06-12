@@ -8,7 +8,7 @@ import { useSocket } from '@/hooks/useSocket';
 import { sounds } from '@/lib/sounds';
 
 export function LobbyScreen() {
-  const { room, playerId, setScreen } = useGameStore();
+  const { room, playerId, setScreen, error } = useGameStore();
   const { toggleReady, startMatch } = useSocket();
   const [copied, setCopied] = useState(false);
 
@@ -46,6 +46,11 @@ export function LobbyScreen() {
         <button onClick={() => setScreen('home')} className="text-sm text-gray-500 hover:text-stadium-green mb-4">
           ← Back to Home
         </button>
+        {error && (
+          <div className="mb-4 bg-red-500/20 border border-red-500/50 text-red-200 p-3 rounded-xl text-sm text-center">
+            {error}
+          </div>
+        )}
         <h1 className="text-3xl font-black text-center mb-2">Room Lobby</h1>
         <div className="text-center">
           <span className="text-gray-400 text-sm">Room Code</span>

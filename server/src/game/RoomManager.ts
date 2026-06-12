@@ -236,8 +236,11 @@ export class RoomManager {
     const { room, player } = result;
 
     if (player.id !== room.hostId) throw new Error('Only host can start match');
-    if (room.teams.length < 2) throw new Error('Teams not configured');
     if (room.players.length < 2) throw new Error('Need at least 2 players for multiplayer');
+
+    if (room.teams.length < 2) {
+      this.autoBalanceTeams(socketId);
+    }
 
     const allReady = room.players.every((p) => p.isReady);
     if (!allReady) throw new Error('All players must be ready');
