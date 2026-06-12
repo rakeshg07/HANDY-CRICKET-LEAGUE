@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { User } from '../models/User';
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../auth/jwt';
+import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from '../auth/jwt';
 import { protect, AuthRequest } from '../auth/authMiddleware';
 
 const router = express.Router();
@@ -85,12 +85,21 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-router.post('/logout', protect, async (req: AuthRequest, res: Response): Promise<void> => {
+router.post('/logout', async (req: Request, res: Response): Promise<void> => {
   try {
-    if (req.user) {
-      req.user.isOnline = false;
-      req.user.lastSeen = new Date();
-      await req.user.save();
+    const token = req.cookies?.accessToken;
+    if (token) {
+      try {
+        const decoded = verifyAccessToken(token);
+        const user = await User.findOne({ userId: decoded.userId });
+        if (user) {
+          user.isOnline = false;
+          user.lastSeen = new Date();
+          await user.save();
+        }
+      } catch {
+        // Token expired or invalid — still clear cookies below
+      }
     }
 
     res.clearCookie('accessToken');

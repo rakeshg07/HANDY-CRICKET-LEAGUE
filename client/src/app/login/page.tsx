@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuthStore } from '@/store/authStore';
 import { api } from '@/lib/api';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { GuestRoute } from '@/components/auth/GuestRoute';
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState('');
@@ -32,6 +33,7 @@ export default function LoginPage() {
   };
 
   return (
+    <GuestRoute>
     <div className="min-h-screen flex items-center justify-center p-4">
       <GlassCard className="w-full max-w-md" strong>
         <div className="text-center mb-8">
@@ -90,5 +92,6 @@ export default function LoginPage() {
         </div>
       </GlassCard>
     </div>
+    </GuestRoute>
   );
 }

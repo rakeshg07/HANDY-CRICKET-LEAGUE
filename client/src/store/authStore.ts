@@ -60,7 +60,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   updateUser: async (updates) => {
     try {
       set({ isLoading: true, error: null });
-      const data = await api.put('/user/update', updates);
+      const data = await api.put('/users/update', updates);
       set({ user: data.user });
     } catch (error: any) {
       const errMsg = error.message || 'Failed to update profile';

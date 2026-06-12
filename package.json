@@ -2,6 +2,9 @@
   "name": "handy-cricket-league",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "workspaces": [
     "shared",
     "server",
@@ -13,7 +16,10 @@
     "dev:client": "npm run dev --workspace=client",
     "build": "npm run build --workspace=shared && npm run build --workspace=server && npm run build --workspace=client",
     "test": "node scripts/run-tests.mjs",
-    "start": "npm run start --workspace=server"
+    "start": "npm run start --workspace=server",
+    "start:client": "npm run start --workspace=client",
+    "docker:up": "docker compose up --build -d",
+    "docker:down": "docker compose down"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

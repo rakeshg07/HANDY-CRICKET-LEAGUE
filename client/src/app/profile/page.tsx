@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -9,10 +10,17 @@ import Link from 'next/link';
 export default function ProfilePage() {
   const { user, logout } = useAuthStore();
   const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    await logout();
-    router.push('/login');
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      router.push('/login');
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   if (!user) return null; // ProtectedRoute handles redirect
@@ -49,9 +57,13 @@ export default function ProfilePage() {
               </div>
 
               <div className="w-full pt-4 border-t border-stadium-border/50">
-                <button onClick={handleLogout} className="text-red-400 hover:text-red-300 transition-colors w-full text-left px-2 py-2 rounded hover:bg-red-500/10 flex items-center justify-between">
-                  <span>Logout</span>
-                  <span>🚪</span>
+                <button
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="text-red-400 hover:text-red-300 transition-colors w-full text-left px-2 py-2 rounded hover:bg-red-500/10 flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+                  <span>{isLoggingOut ? '⏳' : '🚪'}</span>
                 </button>
               </div>
             </div>

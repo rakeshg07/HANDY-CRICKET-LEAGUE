@@ -31,7 +31,7 @@ export function FriendsScreen() {
 
   const fetchFriends = useCallback(async () => {
     try {
-      const data = await api.get('/user/friends');
+      const data = await api.get('/users/friends');
       setFriends(data.friends || []);
     } catch {
       console.warn('Failed to fetch friends');
@@ -40,7 +40,7 @@ export function FriendsScreen() {
 
   const fetchRequests = useCallback(async () => {
     try {
-      const data = await api.get('/user/friends/pending');
+      const data = await api.get('/users/friends/pending');
       setRequests(data.requests || []);
     } catch {
       console.warn('Failed to fetch requests');
@@ -61,7 +61,7 @@ export function FriendsScreen() {
     setSearchError(null);
     setIsLoading(true);
     try {
-      const data = await api.get(`/user/search?userId=${searchQuery.trim()}`);
+      const data = await api.get(`/users/search?userId=${searchQuery.trim()}`);
       setSearchResult(data.user);
     } catch (err: any) {
       setSearchError(err.message || 'User not found');
@@ -73,7 +73,7 @@ export function FriendsScreen() {
   const handleSendRequest = async (targetUserId: string) => {
     sounds.click();
     try {
-      await api.post('/user/friends/request', { targetUserId });
+      await api.post('/users/friends/request', { targetUserId });
       setActionMsg('Friend request sent!');
       setTimeout(() => setActionMsg(null), 3000);
     } catch (err: any) {
@@ -85,7 +85,7 @@ export function FriendsScreen() {
   const handleAccept = async (targetUserId: string) => {
     sounds.click();
     try {
-      await api.post('/user/friends/accept', { targetUserId });
+      await api.post('/users/friends/accept', { targetUserId });
       setActionMsg('Friend request accepted!');
       fetchFriends();
       fetchRequests();
@@ -99,7 +99,7 @@ export function FriendsScreen() {
   const handleDecline = async (targetUserId: string) => {
     sounds.click();
     try {
-      await api.post('/user/friends/decline', { targetUserId });
+      await api.post('/users/friends/decline', { targetUserId });
       setActionMsg('Request declined');
       fetchRequests();
       setTimeout(() => setActionMsg(null), 3000);
@@ -112,7 +112,7 @@ export function FriendsScreen() {
   const handleRemove = async (targetUserId: string) => {
     sounds.click();
     try {
-      await api.post('/user/friends/remove', { targetUserId });
+      await api.post('/users/friends/remove', { targetUserId });
       setActionMsg('Friend removed');
       fetchFriends();
       setTimeout(() => setActionMsg(null), 3000);

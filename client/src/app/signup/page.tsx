@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { useAuthStore } from '@/store/authStore';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { GuestRoute } from '@/components/auth/GuestRoute';
 import { PasswordStrength } from '@/components/auth/PasswordStrength';
 import { UserIdChecker } from '@/components/auth/UserIdChecker';
 import { CountrySelect } from '@/components/auth/CountrySelect';
@@ -24,6 +26,7 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const checkAuth = useAuthStore((s) => s.checkAuth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,7 +55,8 @@ export default function SignupPage() {
 
     try {
       await api.post('/auth/signup', formData);
-      router.push('/login');
+      await checkAuth();
+      router.push('/');
     } catch (err) {
       setError((err as Error).message || 'Signup failed');
     } finally {
@@ -61,6 +65,7 @@ export default function SignupPage() {
   };
 
   return (
+    <GuestRoute>
     <div className="min-h-screen flex items-center justify-center p-4 py-12">
       <GlassCard className="w-full max-w-lg" strong>
         <div className="text-center mb-8">
@@ -193,5 +198,6 @@ export default function SignupPage() {
         </div>
       </GlassCard>
     </div>
+    </GuestRoute>
   );
 }

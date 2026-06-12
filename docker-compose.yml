@@ -1,0 +1,41 @@
+services:
+  mongodb:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      CLIENT_URL: http://localhost:3000
+      MONGODB_URI: mongodb://mongodb:27017/hcl
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-me-in-production-too}
+      NODE_ENV: production
+    depends_on:
+      - mongodb
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      args:
+        NEXT_PUBLIC_SERVER_URL: http://localhost:3001
+        NEXT_PUBLIC_API_URL: http://localhost:3001/api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
+volumes:
+  mongodb_data:

@@ -13,6 +13,7 @@ export function ProfileScreen() {
   const { user, logout } = useAuthStore();
   const { profile, hydrated, hydrate } = useProfileStore();
   const [editOpen, setEditOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -90,14 +91,26 @@ export function ProfileScreen() {
             </button>
 
             <button
+              disabled={isLoggingOut}
               onClick={async () => {
+                if (isLoggingOut) return;
                 sounds.click();
-                await logout();
-                router.push('/login');
+                setIsLoggingOut(true);
+                try {
+                  await logout();
+                  router.push('/login');
+                } finally {
+                  setIsLoggingOut(false);
+                }
               }}
-              className="px-5 py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 font-bold rounded-xl text-sm hover:bg-red-500/20 hover:border-red-500/50 active:scale-95 transition-all flex items-center gap-2 shadow-lg"
+              className="px-5 py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 font-bold rounded-xl text-sm hover:bg-red-500/20 hover:border-red-500/50 active:scale-95 transition-all flex items-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              🚪 Logout
+              {isLoggingOut ? (
+                <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                '🚪'
+              )}
+              {isLoggingOut ? 'Logging out...' : 'Logout'}
             </button>
           </div>
         </div>

@@ -50,7 +50,7 @@ export function MultiplayerTestScreen() {
     try {
       // Step 1: Connect
       updateStep('connect', 'running');
-      const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const SOCKET_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001';
       const sockets: TestSocket[] = Array.from({ length: 4 }).map(() => io(SOCKET_URL));
       socketsRef.current = sockets;
 

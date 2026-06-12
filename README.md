@@ -100,11 +100,50 @@ Server is the source of truth. Moves are hidden until both players submit.
 
 ## Environment Variables
 
+Copy `.env.example` and configure:
+
 ```env
 # client/.env.local
 NEXT_PUBLIC_SERVER_URL=http://localhost:3001
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
 
 # server
 PORT=3001
 CLIENT_URL=http://localhost:3000
+MONGODB_URI=mongodb://localhost:27017/hcl
+JWT_SECRET=your-secret-here
+JWT_REFRESH_SECRET=your-refresh-secret-here
 ```
+
+## Deployment
+
+### CI Pipeline
+
+GitHub Actions runs on every push/PR to `main` or `master`:
+
+1. Install dependencies (`npm ci`)
+2. Build all workspaces (`shared` → `server` → `client`)
+3. Start server with MongoDB service container
+4. Run unit + Socket.IO integration tests
+
+### Docker (full stack)
+
+```bash
+# Set secrets in .env or export before running
+export JWT_SECRET=your-secret
+export JWT_REFRESH_SECRET=your-refresh-secret
+
+npm run docker:up    # builds and starts mongodb + server + client
+npm run docker:down  # stops all services
+```
+
+- **Client**: http://localhost:3000
+- **Server**: http://localhost:3001
+- **Health check**: http://localhost:3001/health
+
+### Production notes
+
+- Deploy **client** and **server** as separate services (Vercel + Railway/Render, etc.)
+- Set `CLIENT_URL` to your frontend URL and `NEXT_PUBLIC_*` vars to your API URL
+- Use MongoDB Atlas for `MONGODB_URI`
+- **Required** in production: `JWT_SECRET` and `JWT_REFRESH_SECRET`
