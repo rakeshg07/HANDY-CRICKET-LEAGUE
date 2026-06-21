@@ -8,19 +8,18 @@ const router = express.Router();
 const setTokenCookies = (res: Response, accessToken: string, refreshToken: string) => {
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: true,
+    sameSite: 'none',
     maxAge: 15 * 60 * 1000, // 15 minutes
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: true,
+    sameSite: 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
-
 router.post('/signup', async (req: Request, res: Response): Promise<void> => {
   try {
     const { fullName, userId, email, password, country, avatar } = req.body;
@@ -148,11 +147,11 @@ router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
     const newAccessToken = generateAccessToken(user.userId);
     
     res.cookie('accessToken', newAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 15 * 60 * 1000,
-    });
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    maxAge: 15 * 60 * 1000,
+  });
 
     res.json({ message: 'Token refreshed' });
   } catch (error) {
